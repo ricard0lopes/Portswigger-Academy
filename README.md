@@ -1,3 +1,3 @@
 # Portswigger-Academy
 
-Repository with notes of my progress in Portswigger Academy
+Repository with notes of completed labs in Portswigger Academy
