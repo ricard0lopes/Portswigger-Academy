@@ -39,7 +39,7 @@ There are two ways to make this attack:
 1 - Modifying the URL in the browser:
 
 ```
-web-security-academy.net/filter?category=Food+%26+Drink'+OR+1=1--'
+web-security-academy.net/filter?category=Food+%26+Drink'+OR+1=1--
 ```
 
 2 - Using Burp Suite to intercept the request and modify the URL:
