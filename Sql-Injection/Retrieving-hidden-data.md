@@ -34,7 +34,7 @@ The modified query will look like this:
 SELECT * FROM products WHERE category = 'Food & Drink' OR 1=1--' AND release = 1
 ```
 
-There are two ways to make this attack.
+There are two ways to make this attack:
 
 1 - Modifying the URL in the browser:
 
