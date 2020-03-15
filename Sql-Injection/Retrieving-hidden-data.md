@@ -1,7 +1,6 @@
 
 ![1](https://user-images.githubusercontent.com/57036558/76711312-c1604d00-6706-11ea-930c-19f769f73079.png)
 
-## Apprentice level
 
 This lab asks us to perform an SQL injection attack that causes the application to display details of all products in any category, both released and unreleased.
 
