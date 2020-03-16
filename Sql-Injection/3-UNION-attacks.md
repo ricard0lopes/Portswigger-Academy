@@ -62,3 +62,26 @@ In the end we can see that the database has 3 columns, and we solve the lab.
 
 ## Finding columns with a useful data type in an SQL injection UNION attack
 
+![3](https://user-images.githubusercontent.com/57036558/76775503-5746b700-679d-11ea-9fed-f8d1f0866e41.png)
+
+In this lab, we are asked to retrieve data from other tables using a UNION attack to find a column containing the value `'FzOyty'`.
+
+The SQL injection UNION attack allows us to retrieve the results from an injected query. To do that, after finding the number of columns in the database, we need to find one or more columns in the original query results whose data type is, or is compatible with, string data (the data we will want to retrieve will be, generally, in string form).
+
+We can use the `UNION SELECT` payload to place a string value into each column in turn, for example, the query in this lab returns three columns, so we will submit:
+
+```
+' UNION SELECT 'FzOyty',NULL,NULL--
+' UNION SELECT NULL,'FzOyty',NULL--
+' UNION SELECT NULL,NULL,'FzOyty'--
+```
+
+If an error does not occur, then the column that contains the string value is suitable for retrieving string data. Otherwise, the injected query will cause a database error.
+
+To solve this exercise we can either use Burp Suite to intercept and modify the request, or do it directly in the browser:
+
+```
+https://web-security-academy.net/filter?category=Gifts%27+UNION+SELECT+NULL,%27FzOyty%27,NULL--
+```
+
+Placing the string in the second column will not result in an error and will display the content on the webpage, this solving the lab.
