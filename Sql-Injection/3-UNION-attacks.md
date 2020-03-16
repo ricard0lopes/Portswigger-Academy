@@ -44,7 +44,7 @@ Example:
 etc. 
 ```
 
-When the number of nulls matches the number of columns, the database returns an addition row in the results set, containing null values in each column. Until there, the application will keep returning some kind of error message.
+When the number of nulls matches the number of columns, the database returns an additional row in the results set, containing null values in each column. Until there, the application will keep returning some kind of error message.
 
 We can exploit this vulnerabilty in two ways:
 
