@@ -44,7 +44,8 @@ web-security-academy.net/filter?category=Food+%26+Drink'+OR+1=1--
 
 2 - Using Burp Suite to intercept the request and modify the URL:
 
-![2](https://user-images.githubusercontent.com/57036558/76711934-09ce3980-670c-11ea-8af3-1a8122c8a2aa.png)
+![2](https://user-images.githubusercontent.com/57036558/76717542-abb14e80-672b-11ea-9b47-c2682a2f0b03.png)
+
 
 
 
