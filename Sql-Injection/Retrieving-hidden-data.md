@@ -26,7 +26,7 @@ Lets break the syntax:
 
 `AND release = 1` -> and release is 1 (1 is being used to show only released products and we presume that 0 would be used to show the unreleased)
 
-We can use the double-dash sequence `--`, interpreted as a comment, to remove the remainder of the query so it no longer includes the `AND released = 1` and displays the all products of the category. Tho, to cause the application to display all the products in any category, we need to return all items where either category is Food & Drink or all of the other categories. To do that we need to create a statement that will evaluate to `true` (1=1 == true) and add the double-dash after it to ignore the rest of the query. 
+We can use the double-dash sequence `--`, interpreted as a comment, to remove the remainder of the query so it no longer includes the `AND released = 1` and displays all the products of the category. Tho, to cause the application to display all the products in any category, we need to return all items where either category is Food & Drink or all of the other categories. To do that we need to create a statement that will evaluate to `true` (1=1 == true) and add the double-dash after it to ignore the rest of the query. 
 
 The modified query will look like this:
 
