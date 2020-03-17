@@ -66,4 +66,53 @@ Which displays the version of the database and solves the lab:
 
 Note: Although I'm showing how to solve all the labs using the browser, Burp Suite is a way faster solution, special using Burp Repeater. In this case, it would encode the `#` character automatically, and would have saved me time and frustration trying to understand why the attack wasn't working even after peaking the solutions.
 
+## Listing the contents of the database
+
+![3](https://user-images.githubusercontent.com/57036558/76906208-614edf80-689b-11ea-9703-770413bf96bf.png)
+
+
+In this lab we are given the information that the application has a login function, and the database contains a table that holds usernames and passwords. To solve it, we need to determine the name of this table and the columns it cointains, then retrieve the contents of the table to obrain the username and password of all users. At the end, we need to login with the administrator credentials to complete the lab.
+
+In most of databases we can use a set of views called information schema which provides information about the database.
+
+We list the tables in the database using `information_schema.tables`, and after the output reveals the tables in it we can use `information_schema.columns` to list the columns in individual tables.
+
+Imagining we have a website vulnerable to SQL injection, and we find out that the database has two columns with both of them displaying data, we can list the tables of the database with the following input:
+
+```
+'+UNION+SELECT+table_name,NULL+FROM+information_schema.tables--
+```
+
+After the table names have been revealed on output, we will then list the columns of a specific table. In this example, lets suppose we find the table `users` in the output:
+
+```
+'+UNION+SELECT+column_name,NULL+FROM+information_schema.columns+WHERE+table_name='users'-- 
+```
+
+Now lets solve the lab, this time with Burp Suite.
+
+First of all we try to find the number of columns:
+
+![4](https://user-images.githubusercontent.com/57036558/76906546-11244d00-689c-11ea-8d8d-5a302f8b2834.png)
+
+Then, after finding out that the website has two columns, which ones display content:
+
+![5](https://user-images.githubusercontent.com/57036558/76906659-5d6f8d00-689c-11ea-98dc-96f17c3ba149.png)
+
+In this case, both of the columns display content. Next step is to list the tables:
+
+![6](https://user-images.githubusercontent.com/57036558/76906784-9e67a180-689c-11ea-9bcc-2ef49c547cf3.png)
+
+The output shows loads of contents, but `users_kodcyi` of them seems the right one to search for the administrator credentials. Now we need to display the columns of this specific table:
+
+![7](https://user-images.githubusercontent.com/57036558/76906990-11711800-689d-11ea-8d83-a8bfbc4fb533.png)
+
+The output shows us two columns named for username and password: `username_gpwxfn` and `password_pnivlv`. Now its time to get the administrator credentials:
+
+![8](https://user-images.githubusercontent.com/57036558/76907400-08cd1180-689e-11ea-9e30-d43594959cc6.png)
+
+Now we've got the administrator credentials:
+
+![9](https://user-images.githubusercontent.com/57036558/76907471-331ecf00-689e-11ea-9d48-3d977d172012.png)
+
 
