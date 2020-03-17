@@ -64,4 +64,6 @@ Which displays the version of the database and solves the lab:
 8.0.15
 ```
 
-Note: Although I'm showing how to solve all the labs using the browser, Burp Suite is a way faster solution, special using Burp Repeater
+Note: Although I'm showing how to solve all the labs using the browser, Burp Suite is a way faster solution, special using Burp Repeater.
+
+
