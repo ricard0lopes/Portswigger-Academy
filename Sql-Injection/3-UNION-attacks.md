@@ -124,3 +124,33 @@ By logging in as administrator we solve the lab.
 
 ## Retrieving multiple values within a single column
 
+![6](https://user-images.githubusercontent.com/57036558/76866801-8ec86880-685c-11ea-9313-7513f9db161a.png)
+
+To solve this lab, we are asked to perform an SQL injection UNION attack that retrieves all username and passwords, and use the information to log in as the administrator.
+
+The process is the same as the above exercise, but instead of two columns returning data we only have one.
+
+To retrieve multiple values together within a single columns we need to concatenate them. The methods vary depending on the database we are performing the SQL injection, but these lab uses Oracle so the concatenation can be done with the following input:
+
+```
+' UNION SELECT username || '~' || password FROM users--
+```
+
+This input uses the double-pipe sequence `||` as the concenation string and the `~` character to separate the values of the username and password fields.
+
+To execute the attack we first need to find the number of columns, then which column displays the data and then execute the input.
+
+As before to do that we can use either Burp Suite or just submit the input directly in the browser's URL:
+
+```
+https://web-security-academy.net/filter?category=Gifts%27+UNION+SELECT+null,username||%27~%27||password+FROM+users--
+```
+The result of this query is the usernames and passwords on the database:
+
+```
+carlos~33313j
+administrator~j3s1l0
+wiener~36q718
+```
+
+To solve the lab we just need to login with the administrator credentials
