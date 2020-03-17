@@ -115,4 +115,31 @@ Now we've got the administrator credentials:
 
 ![9](https://user-images.githubusercontent.com/57036558/76907471-331ecf00-689e-11ea-9d48-3d977d172012.png)
 
+## Equivalent to information scheman on Oracle
+
+![10](https://user-images.githubusercontent.com/57036558/76908410-7f6b0e80-68a0-11ea-9f61-3dd4520ef43a.png)
+
+For this lab we have to do pretty much the same as the previous one, but on an Oracle database.
+
+Instead of `information_schema.tables` and `information_schema.columns` oracle uses the querie `all_tables` to list all tables and `all_tab_columns` to list all columns. Also, as mentioned earlier, every SELECT statement on Oracle must specify a table to select from, and has a built-in table called DUAL.
+
+First step is to list the number of columns in the database:
+
+![11](https://user-images.githubusercontent.com/57036558/76908611-0ae49f80-68a1-11ea-9770-a1b63e92649b.png)
+
+This database also has two columns, like the previous one, and both display content so I am going to skip the check for contet display and proceed to the next phase that is listing the tables:
+
+![12](https://user-images.githubusercontent.com/57036558/76908779-729aea80-68a1-11ea-93f1-9863758da99e.png)
+
+After the tables being listed we find the table `USERS_AMEKVV`. Now its time to find its columns:
+
+![13](https://user-images.githubusercontent.com/57036558/76908912-c9082900-68a1-11ea-990a-aa2444e61638.png)
+
+The table displayed two columns named `USERNAME_ZXLXHR` and `PASSWORD_BCUGZO`, now we can try to find the administrator credentials:
+
+![14](https://user-images.githubusercontent.com/57036558/76909050-1be1e080-68a2-11ea-86ac-17e2e0c5c400.png)
+
+Administrator credentials found:
+
+![15](https://user-images.githubusercontent.com/57036558/76909144-577caa80-68a2-11ea-9982-b7d4e09674d0.png)
 
