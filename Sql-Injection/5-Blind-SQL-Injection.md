@@ -44,7 +44,24 @@ Although Burp Suite is a great tool, the process of finding a password using it 
 
 [Blind SQL injection with conditional responses Python](https://github.com/ricard0lopes/Portswigger-Academy/blob/master/Sql-Injection/tools/blind.py)
 
+## Inducing conditional responses by triggering SQL errors
 
+![7](https://user-images.githubusercontent.com/57036558/77114105-dd742f00-6a23-11ea-9b81-d531c8d31abb.png)
 
+This lab uses again tracking cookies for analytics, and performs an SQL query containing the value of the submitted cookie. We are given the infromation that the database contains a different table called users, with columns called username and password, and that to solve the lab we need to exploit the blind SQL injection vulnerability to find out the password of the administrator user.
 
+Supposing that the SQL query does not behave any differently depending on whether the query returns any data, the techniques used before will not work since injecting different Boolean conditions makes no difference to the application's response. In this situation, we need to try to return conditional responses by triggering SQL errors conditionally. By modifying a query to `true`, it will cause a database error, and by modifiying it to `false` will not return any result whatsoever. 
 
+So, to solve this lab, we first need to verify if an error message is received using (`'` or `''` may trigger the error). Then, we need to find which type of database the application is using. To do that we can check the 
+[SQL injection cheat sheet](https://github.com/ricard0lopes/Portswigger-Academy/blob/master/Sql-Injection/SQL-injection-cheat-sheet.md) and try the different methods for testing conditional erros or each database. We will know which database is being used when our `false` conditional injection doesn't throw any error and returns the website page. The next step is is to verify the conditonal error using the right database's query injection and to notice how it throws the error only if the condition is `true`.
+
+Now it is time to find if there is a user called administrator. Since this lab is running Oracle as its database we can use the following query (but the process is pretty much the same for other databases, you just need to modify the conditional part of the query):
+
+```
+TrackingId='+UNION+SELECT+CASE+WHEN+(username='administrator')+THEN+to_char(1/0)+ELSE+NULL+END+FROM+users--
+```
+
+Since the conditional returns an error from the application, it means that there is a user called administrator.
+Now the process is basically the same as the lab before: finding the length of administrator's password, then find the characters of the password one by one. 
+
+To solve this lab I decided to create my own script using Burp Suite to debug my requests. You can check the script [Python automated lab](https://github.com/ricard0lopes/Portswigger-Academy/blob/master/Sql-Injection/tools/blind2.py) and use or change it as you wish. 
