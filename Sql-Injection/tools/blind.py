@@ -1,5 +1,14 @@
 #!/usr/bin python3
 
+''''
+Script created to solve the first lab of the blind SQL injection learning section.
+
+Usage:
+python3 blind.py -u <url> 
+or
+python3 blind.py --url <url>
+''''
+
 import requests
 import sys
 import argparse
