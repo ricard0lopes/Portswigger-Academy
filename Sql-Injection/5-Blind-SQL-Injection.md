@@ -22,7 +22,7 @@ Then, we change it to `TrackingId=x'+OR+1=2--` which will return as `false` and 
 
 ![3](https://user-images.githubusercontent.com/57036558/77020881-0db4c280-697d-11ea-88d6-cdcf3748f1a7.png)
 
-Now, we need to confirm that there is a user called administrator. To do that we change the cookie to `TrackingId=x'+UNION+SELECT+'a'+FROM+users+WHERE+username='administrator'--`:
+Now, we need to confirm that there is a user called administrator, but first we need to find the number of columns in the database. We can easily verify the number of columns using the `null` method from the other labs. To confirm that the user administrator exists we change the cookie to `TrackingId=x'+UNION+SELECT+'a'+FROM+users+WHERE+username='administrator'--`:
 
 ![4](https://user-images.githubusercontent.com/57036558/77020997-6a17e200-697d-11ea-8def-bb716bd116a7.png)
 
