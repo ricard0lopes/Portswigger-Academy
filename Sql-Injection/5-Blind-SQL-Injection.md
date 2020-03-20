@@ -30,7 +30,7 @@ Next we need to determine how many characters are in the password of the adminis
 
 ![5](https://user-images.githubusercontent.com/57036558/77022212-e9f37b80-6980-11ea-96ac-b146f81713d2.png)
 
-We can notice by the of the response that it changes once our payload injected the number 6, meaning that the lenght of the password is bigger than 5 but not bigger than 6, therefore it has 6 characters. So now we know the lenght of the password, we need to find the actual characters it contains. To do this we change the cookie to `TrackingId=x'+UNION+SELECT+'a'+FROM+users+WHERE+username='administrator'+AND+substring(password,1,1)='a'--`, change the payload type to "Cluster bomb" and select the first "1" and "a" as the payload markers. Then for the first payload we add a range of 1-6 and for the second from a-z. The rest of the process is like the previous method. We hit "Start attack" and wait for a response to tell us the password characters:
+We can notice by the of the response that it changes once our payload injected the number 6, meaning that the lenght of the password is bigger than 5 but not bigger than 6, therefore it has 6 characters. So now we know the lenght of the password, we need to find the actual characters it contains. To do this we change the cookie to `TrackingId=x'+UNION+SELECT+'a'+FROM+users+WHERE+username='administrator'+AND+substring(password,1,1)='a'--`, change the payload type to "Cluster bomb" and select the first "1" and "a" in `substring(1,1)='a'` as the payload markers. Then for the first payload we add a range of 1-6 and for the second from a-z. The rest of the process is like the previous method. We hit "Start attack" and wait for a response to tell us the password characters:
 
 ```
 password: tyhmpe
